@@ -2,8 +2,12 @@
 
 
 #include "FPSExtractionZone.h"
+#include "FPSCharacter.h"
+#include "FPSGameMode.h"
 #include "Components/BoxComponent.h"
 #include "Components/DecalComponent.h"
+#include "Sound/SoundBase.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 AFPSExtractionZone::AFPSExtractionZone()
@@ -34,7 +38,26 @@ void AFPSExtractionZone::BeginPlay()
 
 void AFPSExtractionZone::HandleOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	
+	AFPSCharacter* MyPawn = Cast<AFPSCharacter>(OtherActor);
+	if (MyPawn == nullptr)
+	{
+		return;
+	}
+	if (MyPawn->bIsCarryingObjective)
+	{
+		AFPSGameMode* GameMode = Cast<AFPSGameMode>(GetWorld()->GetAuthGameMode());// GetAuthGameMode only available if call it in server, if call it in client it will return null. It's work here because this is a single player game
+		if (GameMode)
+		{
+			GameMode->CompleteMission(MyPawn);
+		}
+	}
+	else
+	{
+		if (ObjectiveMissingSound)
+		{
+			UGameplayStatics::PlaySoundAtLocation(this, ObjectiveMissingSound, GetActorLocation());
+		}
+	}
 }
 
 // Called every frame
