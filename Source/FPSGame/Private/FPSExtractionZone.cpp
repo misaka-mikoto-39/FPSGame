@@ -48,7 +48,7 @@ void AFPSExtractionZone::HandleOverlap(UPrimitiveComponent* OverlappedComponent,
 		AFPSGameMode* GameMode = Cast<AFPSGameMode>(GetWorld()->GetAuthGameMode());// GetAuthGameMode only available if call it in server, if call it in client it will return null. It's work here because this is a single player game
 		if (GameMode)
 		{
-			GameMode->CompleteMission(MyPawn);
+			GameMode->CompleteMission(MyPawn, true);
 		}
 	}
 	else
