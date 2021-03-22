@@ -71,7 +71,7 @@ void AFPSCharacter::Fire()
 }
 
 // implement for function ServerFire()
-void AFPSCharacter::ServerFire_Implemetation()
+void AFPSCharacter::ServerFire_Implementation()
 {
 	// try and fire a projectile
 	if (ProjectileClass)

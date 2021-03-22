@@ -58,7 +58,7 @@ protected:
 	/** Fires a projectile. */
 	void Fire();
 
-	// server function, implement by ServerFire_Implemetation(), call by ServerFire()
+	// server function, implement by ServerFire_Implementation(), call by ServerFire()
 	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerFire();
 
