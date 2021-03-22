@@ -58,6 +58,10 @@ protected:
 	/** Fires a projectile. */
 	void Fire();
 
+	// server function, implement by ServerFire_Implemetation(), call by ServerFire()
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerFire();
+
 	/** Handles moving forward/backward */
 	void MoveForward(float Val);
 
