@@ -3,6 +3,7 @@
 
 #include "FPSAIGuard.h"
 #include "Perception/PawnSensingComponent.h"
+#include "Components/WidgetComponent.h"
 #include "DrawDebugHelpers.h"
 #include "FPSGameMode.h"
 
@@ -12,9 +13,13 @@ AFPSAIGuard::AFPSAIGuard()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	PawnSensingComp = CreateDefaultSubobject<UPawnSensingComponent>(TEXT("PawnSensingComp"));
+	WidgetComp = CreateDefaultSubobject<UWidgetComponent>(TEXT("WidgetComp"));
+	WidgetComp->SetupAttachment(RootComponent);
 
 	PawnSensingComp->OnSeePawn.AddDynamic(this, &AFPSAIGuard::OnPawnSeen);
 	PawnSensingComp->OnHearNoise.AddDynamic(this, &AFPSAIGuard::OnNoiseHeard);
+
+	GuardState = EAIState::Idle;
 }
 
 // Called when the game starts or when spawned
@@ -22,6 +27,7 @@ void AFPSAIGuard::BeginPlay()
 {
 	Super::BeginPlay();
 	OriginalRotation = GetActorRotation();
+
 }
 
 void AFPSAIGuard::OnPawnSeen(APawn* Pawn)
@@ -36,10 +42,15 @@ void AFPSAIGuard::OnPawnSeen(APawn* Pawn)
 	{
 		GameMode->CompleteMission(Pawn, false);
 	}
+	SetGuardState(EAIState::Alerted);
 }
 
 void AFPSAIGuard::OnNoiseHeard(APawn* NoiseInstigator, const FVector& Location, float Volume)
 {
+	if (GuardState == EAIState::Alerted)
+	{
+		return;
+	}
 	DrawDebugSphere(GetWorld(), Location, 32.0f, 12, FColor::Green, false, 10.0f);
 	FVector Direction = Location - GetActorLocation();
 	Direction.Normalize();
@@ -50,11 +61,29 @@ void AFPSAIGuard::OnNoiseHeard(APawn* NoiseInstigator, const FVector& Location, 
 
 	GetWorldTimerManager().ClearTimer(TimerHandle_ResetOrientation);
 	GetWorldTimerManager().SetTimer(TimerHandle_ResetOrientation, this, &AFPSAIGuard::ResetOrientation, 3.0f);
+	
+	SetGuardState(EAIState::Suspicuius);
 }
+
 
 void AFPSAIGuard::ResetOrientation()
 {
+	if (GuardState == EAIState::Alerted)
+	{
+		return;
+	}
+	SetGuardState(EAIState::Idle);
 	SetActorRotation(OriginalRotation);
+}
+
+void AFPSAIGuard::SetGuardState(EAIState NewState)
+{
+	if (GuardState == NewState)
+	{
+		return;
+	}
+	GuardState = NewState;
+	OnStateChange(GuardState);
 }
 
 // Called every frame
