@@ -61,6 +61,8 @@ protected:
 	// server function, implement by ServerFire_Implementation(), call by ServerFire()
 	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerFire();
+	void ServerFire_Implementation();
+	bool ServerFire_Validate();
 
 	/** Handles moving forward/backward */
 	void MoveForward(float Val);
@@ -76,6 +78,9 @@ public:
 
 	/** Returns FirstPersonCameraComponent subobject **/
 	UCameraComponent* GetFirstPersonCameraComponent() const { return CameraComponent; }
+
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
 
 };
 
