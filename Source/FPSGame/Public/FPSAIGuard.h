@@ -56,7 +56,12 @@ protected:
 
 	FTimerHandle TimerHandle_ResetOrientation;
 
-	EAIState GuardState;
+	//Sync value between client and server
+	UPROPERTY(ReplicatedUsing=OnRep_GuardState)
+		EAIState GuardState;
+
+	UFUNCTION()
+		void OnRep_GuardState();
 
 public:	
 	// Called every frame

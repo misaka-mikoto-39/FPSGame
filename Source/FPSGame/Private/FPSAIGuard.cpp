@@ -6,6 +6,7 @@
 #include "Components/WidgetComponent.h"
 #include "DrawDebugHelpers.h"
 #include "FPSGameMode.h"
+#include "Net/UnrealNetwork.h"
 
 // Sets default values
 AFPSAIGuard::AFPSAIGuard()
@@ -20,6 +21,7 @@ AFPSAIGuard::AFPSAIGuard()
 	PawnSensingComp->OnHearNoise.AddDynamic(this, &AFPSAIGuard::OnNoiseHeard);
 
 	GuardState = EAIState::Idle;
+	bReplicates = true;
 }
 
 // Called when the game starts or when spawned
@@ -83,6 +85,13 @@ void AFPSAIGuard::SetGuardState(EAIState NewState)
 		return;
 	}
 	GuardState = NewState;
+
+	OnRep_GuardState();
+	OnStateChange(GuardState);
+}
+
+void AFPSAIGuard::OnRep_GuardState()
+{
 	OnStateChange(GuardState);
 }
 
@@ -91,6 +100,13 @@ void AFPSAIGuard::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+void AFPSAIGuard::GetLifetimeReplicatedProps(TArray< FLifetimeProperty >& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(AFPSAIGuard, GuardState);
 }
 
 // Called to bind functionality to input

@@ -7,6 +7,7 @@
 #include "Components/CapsuleComponent.h"
 #include "Components/PawnNoiseEmitterComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "Net/UnrealNetwork.h"
 
 AFPSCharacter::AFPSCharacter()
 {
@@ -29,6 +30,7 @@ AFPSCharacter::AFPSCharacter()
 	GunMeshComponent->SetupAttachment(Mesh1PComponent, "GripPoint");
 
 	NoiseEmitterComp = CreateDefaultSubobject<UPawnNoiseEmitterComponent>(TEXT("NoiseEmitter"));
+	bReplicates = true;
 }
 
 
@@ -125,4 +127,14 @@ void AFPSCharacter::MoveRight(float Value)
 		// add movement in that direction
 		AddMovementInput(GetActorRightVector(), Value);
 	}
+}
+
+
+void AFPSCharacter::GetLifetimeReplicatedProps(TArray< FLifetimeProperty >& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(AFPSCharacter, bIsCarryingObjective);
+
+	//DOREPLIFETIME_CONDITION(AFPSCharacter, bIsCarryingObjective, COND_OwnerOnly);
 }
