@@ -136,5 +136,6 @@ void AFPSCharacter::GetLifetimeReplicatedProps(TArray< FLifetimeProperty >& OutL
 
 	DOREPLIFETIME(AFPSCharacter, bIsCarryingObjective);
 
+	//optimization
 	//DOREPLIFETIME_CONDITION(AFPSCharacter, bIsCarryingObjective, COND_OwnerOnly);
 }

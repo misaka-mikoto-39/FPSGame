@@ -87,7 +87,6 @@ void AFPSAIGuard::SetGuardState(EAIState NewState)
 	GuardState = NewState;
 
 	OnRep_GuardState();
-	OnStateChange(GuardState);
 }
 
 void AFPSAIGuard::OnRep_GuardState()
