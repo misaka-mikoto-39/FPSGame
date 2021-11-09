@@ -32,10 +32,14 @@ void AFPSGameMode::CompleteMission(APawn* InstigatorPawn, bool IsMissionComplete
 			if (ReturnedActors.Num() > 0)
 			{
 				AActor* NewViewtarget = ReturnedActors[0];
-				APlayerController* PlayerController = Cast<APlayerController>(InstigatorPawn->GetController());
-				if (PlayerController)
+				//multiplayer
+				for (FConstPlayerControllerIterator It = GetWorld()->GetPlayerControllerIterator(); It; It++)
 				{
-					PlayerController->SetViewTargetWithBlend(NewViewtarget, 0.5f, EViewTargetBlendFunction::VTBlend_Cubic);
+					APlayerController* PlayerController = It->Get();
+					if (PlayerController)
+					{
+						PlayerController->SetViewTargetWithBlend(NewViewtarget, 0.5f, EViewTargetBlendFunction::VTBlend_Cubic);
+					}
 				}
 			}
 		}

@@ -14,6 +14,7 @@ class FPSGAME_API AFPSGameState : public AGameStateBase
 {
 	GENERATED_BODY()
 public:
+	//Multicast function, call in all client and server
 	UFUNCTION(NetMulticast, Reliable)
 		void MulticastOnMissionComplete(APawn* InstigatorPawn, bool IsMissionComplete);
 	void MulticastOnMissionComplete_Implementation(APawn* InstigatorPawn, bool IsMissionComplete);
