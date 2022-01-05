@@ -7,6 +7,9 @@
 #include "DrawDebugHelpers.h"
 #include "FPSGameMode.h"
 #include "Net/UnrealNetwork.h"
+// Console command to turn on/off draw debug sphere
+static int32 DebugSphereDrawing = 0;
+FAutoConsoleVariableRef CVARDebugSphereDrawing(TEXT("DEBUG.DebugSphere"), DebugSphereDrawing, TEXT("Draw Debug Sphere"), ECVF_Cheat);
 
 // Sets default values
 AFPSAIGuard::AFPSAIGuard()
@@ -38,7 +41,10 @@ void AFPSAIGuard::OnPawnSeen(APawn* Pawn)
 	{
 		return;
 	}
-	DrawDebugSphere(GetWorld(), Pawn->GetActorLocation(), 32.0f, 12, FColor::Red, false, 10.0f);
+	if (DebugSphereDrawing > 0)
+	{
+		DrawDebugSphere(GetWorld(), Pawn->GetActorLocation(), 32.0f, 12, FColor::Red, false, 1.0f);
+	}
 	AFPSGameMode* GameMode = Cast<AFPSGameMode>(GetWorld()->GetAuthGameMode());// GetAuthGameMode only available if call it in server, if call it in client it will return null. It's work here because this is a single player game
 	if (GameMode)
 	{
@@ -53,7 +59,10 @@ void AFPSAIGuard::OnNoiseHeard(APawn* NoiseInstigator, const FVector& Location, 
 	{
 		return;
 	}
-	DrawDebugSphere(GetWorld(), Location, 32.0f, 12, FColor::Green, false, 10.0f);
+	if (DebugSphereDrawing > 0)
+	{
+		DrawDebugSphere(GetWorld(), Location, 32.0f, 12, FColor::Green, false, 1.0f);
+	}
 	FVector Direction = Location - GetActorLocation();
 	Direction.Normalize();
 	FRotator NewLookAt = FRotationMatrix::MakeFromX(Direction).Rotator();
