@@ -9,7 +9,7 @@
 #include "Net/UnrealNetwork.h"
 // Console command to turn on/off draw debug sphere
 static int32 DebugSphereDrawing = 0;
-FAutoConsoleVariableRef CVARDebugSphereDrawing(TEXT("DEBUG.DebugSphere"), DebugSphereDrawing, TEXT("Draw Debug Sphere"), ECVF_Cheat);
+FAutoConsoleVariableRef CVARDebugSphereDrawing(TEXT("TEST.DebugSphereDrawing"), DebugSphereDrawing, TEXT("Draw Debug Sphere"), ECVF_Cheat);
 
 // Sets default values
 AFPSAIGuard::AFPSAIGuard()
